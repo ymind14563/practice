@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document</title>
+      <!-- axios cdn -->
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>회원 정보</h1>
+    <a href="/user">HOME</a>
+    <p>ID 수정 불가능, Password, Name 수정 가능</p>
+
+    <!-- TODO: 각 input의 value 값을 로그인 한 사람의 정보로 채우기 -->
+    <form name="form_profile">
+      <label for="userid">ID</label>
+      <input type="hidden" id="id" value="" />
+      <!-- readonly: userid는 수정 불가능 (조건임) -->
+      <input id="userid" type="text" name="userid" value="<%= user.userid %>" readonly /><br />
+      <label for="password">Password</label>
+      <input id="password" type="password" name="pw" value="<%= user.pw %>" required /><br />
+      <label for="name">Name</label>
+      <input id="name" type="text" name="name" value="<%= user.name %>" required /><br />
+      <button type="button" onclick="profileEdit();">Edit</button>
+      <button type="button" onclick="profileDelete();">Delete</button>
+    </form>
+
+    <script>
+        
+
+      function profileEdit() {
+          const userid = document.querySelector('#userid').value;
+          const pw = document.querySelector('#password').value;
+          const name = document.querySelector('#name').value;
+
+          axios.patch('/user/profile/edit', { data : { userid, pw, name }})
+              .then(response => {
+                
+                alert(response.data.message);
+
+                // 수정 후 input 업데이트
+                document.querySelector('#userid').value = userid;
+                document.querySelector('#password').value = pw;
+                document.querySelector('#name').value = name;
+                
+              })
+              .catch(error => {
+                  alert('에러가 발생했습니다.');
+                  console.error(error);
+              });
+      }
+
+      function profileDelete() {
+          const userid = document.querySelector('#userid').value;
+
+          axios.delete('/user/profile/delete', { data : { userid } })
+              .then(response => {
+                  alert(response.data.message);
+                  document.location.href = '/user';
+              })
+              .catch(error => {
+                  alert('에러가 발생했습니다.');
+                  console.error(error);
+              });
+      }
+
+      
+  </script>
+</body>
+</html>

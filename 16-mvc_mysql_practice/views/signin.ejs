@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document</title>
+      <!-- axios cdn -->
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+  <body>
+    <h1>로그인</h1>
+    <!-- 
+      [로그인] 버튼을 클릭하면 profile.ejs에서 특정 유저 정보를 보여주어야 하기 때문에 
+      userid 정보를 value에 저장(POST /user/signin 요청의 응답을 받은 후 수행)하여
+      폼(input)이 보이지 않도록 hidden 처리함
+    -->
+    <form name="form_info" action="/user/profile" method="POST">
+      <input type="hidden" name="userid" />
+      <input type="hidden" name="name" />
+      <input type="hidden" name="pw" />
+    </form>
+
+    <form name="form_login">
+      <label for="userid">ID</label>
+      <input id="userid" type="text" name="userid" required /><br />
+      <label for="password">Password</label>
+      <input id="password" type="password" name="pw" required /><br />
+      <button type="button" onclick="login();">Login</button>
+    </form>
+
+    
+    <a href="/user/signup">Register</a>
+
+    <script>
+      // POST /user/signin
+      function login() {
+
+        const form = document.forms['form_login'];
+
+        // const userid = document.querySelector(`#userid`).value;
+        // const pw = document.querySelector(`#password`).value;
+
+        if (!form.userid.value.trim() || !form.pw.value) {
+          alert('빈칸이 있습니다.');
+          return;
+
+        } else {
+          axios.post('/user/signin', { 
+
+            userid : form.userid.value, 
+            pw : form.pw.value
+
+           }).then(response => {
+
+              alert('로그인에 성공하였습니다.');
+              const user = response.data;
+              document.querySelector('input[name="userid"]').value = user.userid;
+              document.querySelector('input[name="name"]').value = user.name;
+              document.querySelector('input[name="pw"]').value = user.pw;
+              document.forms['form_info'].submit();
+              // document.location.href = '/user/profile';
+              
+            }).catch(error => {
+              if (error.response && error.response.status === 401) {
+                alert(error.response.data.message); // 서버에서 반환한 에러 메시지 출력
+              } else {
+                alert('에러가 발생했습니다.'); // 기타 오류 처리
+              }
+              console.error('에러가 발생했습니다.', error);
+
+            });
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document</title>
+      <!-- axios cdn -->
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+  <body>
+    <h1>회원가입</h1>
+    <form name="form_register">
+      <label for="userid">ID</label>
+      <input id="userid" type="text" name="userid" required /><br />
+      <label for="password">Password</label>
+      <input id="password" type="password" name="pw" required /><br />
+      <label for="name">Name </label>
+      <input id="name" type="text" name="name" required /><br />
+      <button type="button" onclick="register();">Register</button>
+    </form>
+    <a href="/user/signin">Login</a>
+    <h4>회원가입 시 자동으로 로그인 페이지로 이동합니다.</h4>
+    <script>
+      // POST /user/signup
+      function register() {
+        
+        const userid = document.querySelector(`#userid`).value;
+        const pw = document.querySelector(`#password`).value;
+        const name = document.querySelector(`#name`).value;
+
+        if (!userid.trim() || !pw || !name.trim()) {
+          alert(`빈칸이 있습니다.`);
+          return;
+
+        } else {
+          axios.post('/user/signup', { 
+            userid,
+            pw,
+            name
+
+          }).then(response => {
+            alert(`회원 가입을 환영합니다.`);
+            // 회원가입 성공 시 로그인 페이지로 이동
+            document.location.href = `/user/signin`;
+
+          }).catch(error => {
+            if (error.response && error.response.status === 400) {
+              alert(error.response.data.message); // 서버에서 반환한 에러 메시지 출력
+              document.querySelector('#userid').value = '';
+              document.querySelector('#password').value = '';
+              document.querySelector('#name').value = '';
+
+            }
+            console.error('에러가 발생했습니다.', error);
+          });
+        }
+      }
+    </script>
+  </body>
+</html>
