@@ -14,6 +14,7 @@ exports.postSignUp = (data, callback) => {
 
         if (results.length > 0) {
             return callback(new Error(`이미 있는 회원입니다.`));
+            
         } else {
             conn.query(`INSERT INTO user (userid, name, pw) VALUES ('${data.userid}', '${data.name}', '${data.pw}')`,
             (err, result) => {

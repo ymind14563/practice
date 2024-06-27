@@ -58,7 +58,7 @@
           axios.delete('/user/profile/delete', { data : { userid } })
               .then(response => {
                   alert(response.data.message);
-                  document.location.href = '/user';
+                  document.location.href = '/user'; // 삭제 후 초기화면으로 이동
               })
               .catch(error => {
                   alert('에러가 발생했습니다.');

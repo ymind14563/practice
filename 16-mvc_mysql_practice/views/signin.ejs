@@ -15,6 +15,7 @@
       userid 정보를 value에 저장(POST /user/signin 요청의 응답을 받은 후 수행)하여
       폼(input)이 보이지 않도록 hidden 처리함
     -->
+    <!-- forms[].submit(); 사용 시 페이지 이동하게 되는데 목적지는 action=""으로 간다. -->
     <form name="form_info" action="/user/profile" method="POST">
       <input type="hidden" name="userid" />
       <input type="hidden" name="name" />
@@ -58,8 +59,8 @@
               document.querySelector('input[name="userid"]').value = user.userid;
               document.querySelector('input[name="name"]').value = user.name;
               document.querySelector('input[name="pw"]').value = user.pw;
-              document.forms['form_info'].submit();
-              // document.location.href = '/user/profile';
+              document.forms['form_info'].submit(); // 폼 제출 / 페이지 이동 기능도 포함하고 있음 
+              // document.location.href = '/user/profile'; // forms[].submit(); 인해 생략
               
             }).catch(error => {
               if (error.response && error.response.status === 401) {

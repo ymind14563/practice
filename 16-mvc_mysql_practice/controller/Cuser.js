@@ -53,7 +53,7 @@ exports.postProfile = (req, res) => {
 
 // 프로필 수정
 exports.patchProfile = (req, res) => {
-    User.patchProfile(req.body.data, (err, result) => {
+    User.patchProfile(req.body.data, (err) => {
         if (err) {
             return res.status(500).send({ message: err.message });
         }
@@ -66,7 +66,7 @@ exports.patchProfile = (req, res) => {
 
 // 프로필 삭제
 exports.deleteProfile = (req, res) => {
-    User.deleteProfile(req.body.userid, (err, result) => {
+    User.deleteProfile(req.body.userid, (err) => {
         if (err) {
             return res.status(500).send({ message: err.message });
         }
